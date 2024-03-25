@@ -25,7 +25,42 @@ base_grammar = CFG.fromstring("""
     PP -> P NP | P NP_ez | P DetP | P CONJ | PP VP | NUM PP | P NUM
     PostP -> NP P | ProP P
 """)
-        
+
+"""
+    FulS::= PUNCT* S PUNCT* SConjP* PUNCT*                                                                                          // целое предложение
+    S ::= NP* VP CP*                                                                                                                // главное предложение
+    SConjP ::= SCONJ VP                                                                                                             // зависимое предложене
+    CP ::= CONJ+ NP | CONJ+ VP                                                                                                      // conjunction phrase
+    CompV ::= (N | ADJ)+ V                                                                                                          // комплимента глагольной группы
+    PP ::= P (NP | NP_ez | DetP) | PP VP | NUM PP                                                                                   // prepositional phrase
+    PostP -> (NP | NP_ez) P | ProP P                                                                                                // postpositional phrase
+    ProP ::= PRO (NP | NP_ez+)                                                                                                      // pronoun phrase
+    NP_ez ::= N_ez+ (NP | AdjP) | N_ez+ PRO                                                                                         // изафетная конструкция
+    DetP ::= DET (NP | NP_ez)                                                                                                       // determinant phrase
+    VP ::= (NP| DemP | NP_ez | AdjP| PP | PostP | DetP) V | (ADV | PP | N | ProP | DetP | VP CONJ) VP | V VP*                       // verb phrase
+    DemP ::= DEM NP                                                                                                                 // demonstrative phrase
+    NP ::= N (NP | AdjP) | NP CONJ NP | NP (N | PRO) | (PRO | NUM) NP | ProP CONJ NP | NP CONJ ProP | PUNCT (N | NP) PUNCT          // noun phrase
+    ProP ::= PRO (CONJ PRO)*                                                                                                        // местоименная группа
+    AdjP ::= ADJ | ADJ_ez (ADJ | AdjP | DetP | NP | ProP)                                                                           // adjective phrase
+"""
+# base_grammar = CFG.fromstring("""
+#     FulS -> S PUNCT | S | PUNCT S | PUNCT S PUNCT
+#     S -> NP VP | VP | VP CP | VP SConjP
+#     SConjP -> SCONJ VP
+#     CP -> CONJ NP | CONJ VP
+#     CompV -> N V | ADJ V
+#     NP_ez -> N_ez NP | N_ez AdjP | N_ez NP_ez | NP_ez PRO
+#     ProP -> PRO NP | PRO NP_ez
+#     NP -> N | N_ez | N NP | N AdjP | NP CONJ NP | N AdjP | NP N | NP PRO | PRO NP | NUM NP | ProP CONJ NP | NP CONJ ProP | PUNCT N PUNCT | PUNCT NP PUNCT
+#     VP -> NP V | NP_ez V | AdjP V | ADV VP | N VP | PP V | PP VP | PostP V | ProP VP | V | V VP | DetP VP
+#     ProP -> PRO | PRO CONJ PRO
+#     DemP -> DEM NP
+#     AdjP -> ADJ | ADJ_ez | ADJ_ez AdjP | ADJ_ez DetP | ADJ_ez NP | ADJ_ez ProP
+#     DetP -> DET NP | DetP ADJ
+#     PP -> P NP | P NP_ez | P DetP | P CONJ | PP VP | NUM PP | P NUM
+#     PostP -> NP P | ProP P
+# """)
+
 def parse_sentence(sentence:str):
     try:
         # Проверяем язык текста
